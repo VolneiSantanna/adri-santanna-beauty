@@ -1500,15 +1500,15 @@ a {
 
 .space-photo-card img {
   width: 100%;
-  aspect-ratio: 4 / 4.6;
+  aspect-ratio: 4 / 5;
   object-fit: cover;
-  object-position: center 62%;
+  object-position: center 55%;
   border-radius: 0.9rem;
 }
 
 .space-video-card .clinic-video {
-  aspect-ratio: 4 / 4.6;
-  object-position: center 35%;
+  aspect-ratio: 4 / 5;
+  object-position: center center;
 }
 
 .space-video-card .video-frame-wrapper--light {
