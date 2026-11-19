@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estúdio de Materiais — Adri Sant’Anna Beauty</title>
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="theme-color" content="#2D3834">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,14,400;0,14,500;0,14,600;1,14,400;1,14,500&amp;family=Jost:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="materiais.css">
+</head>
+<body>
+  <a class="skip-link" href="#mainContent">Ir para o conteúdo principal</a>
+
+  <!-- TELA DE ACESSO (PIN DE 4 DÍGITOS) -->
+  <section class="pin-gate" id="pinGate" aria-labelledby="pinTitle">
+    <div class="pin-card">
+      <div class="pin-brand">
+        <div class="brand-wordmark" aria-label="Adri Sant'Anna Beauty">
+          <span class="wordmark-main">
+            <span class="wordmark-first">Adri</span>
+            <span class="wordmark-last">Sant<span class="wordmark-apostrophe" aria-hidden="true">’</span>Anna</span>
+          </span>
+          <span class="wordmark-sub">
+            <span class="wordmark-rule" aria-hidden="true"></span>
+            <span class="wordmark-beauty">Beauty</span>
+            <span class="wordmark-ornament" aria-hidden="true">
+              <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.2">
+                <path d="M8 1.5C9.2 5.2 10.8 6.8 14.5 8C10.8 9.2 9.2 10.8 8 14.5C6.8 10.8 5.2 9.2 1.5 8C5.2 6.8 6.8 5.2 8 1.5Z"/>
+              </svg>
+            </span>
+            <span class="wordmark-rule" aria-hidden="true"></span>
+          </span>
+        </div>
+      </div>
+
+      <h1 class="pin-title" id="pinTitle">Área Exclusiva da Clínica</h1>
+      <p class="pin-desc">Estúdio privativo para montar e enviar orientações, planos de tratamento e guias em PDF com a marca Adri Sant’Anna Beauty.</p>
+
+      <form id="pinForm" class="pin-form" novalidate>
+        <div class="field-group">
+          <label for="pinInput">PIN de acesso</label>
+          <span id="pinHint" class="field-hint">Digite os 4 dígitos numéricos de acesso</span>
+          <input
+            type="password"
+            id="pinInput"
+            name="pin"
+            class="pin-input"
+            inputmode="numeric"
+            autocomplete="one-time-code"
+            maxlength="4"
+            pattern="[0-9]{4}"
+            required
+            placeholder="••••"
+            aria-invalid="false"
+            aria-describedby="pinHint"
+            data-error="pinError"
+          >
+          <div id="pinError" class="field-error">
+            <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" role="img" aria-label="Erro">
+              <circle cx="10" cy="10" r="8"/>
+              <path d="M10 6.5V10.5" stroke-linecap="round"/>
+              <circle cx="10" cy="13.5" r="0.8" fill="currentColor" stroke="none"/>
+            </svg>
+            <span id="pinErrorText">Informe exatamente 4 números para acessar o estúdio.</span>
+          </div>
+        </div>
+
+        <label class="checkbox-field" for="rememberPinCheckbox">
+          <input type="checkbox" id="rememberPinCheckbox" checked>
+          <span>Manter acesso neste aparelho</span>
+        </label>
+
+        <button type="submit" class="btn btn-primary btn-full">
+          <span>Entrar no Estúdio</span>
+          <svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M4 10H16M16 10L11 5M16 10L11 15" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </form>
+
+      <div class="pin-footer-link">
+        <a href="index.html" class="link-editorial">Voltar para o site da clínica</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ESTÚDIO DE MATERIAIS & PDF -->
+  <div class="studio-app" id="studioApp" hidden>
+    <header class="studio-header">
+      <div class="studio-header-inner">
+        <div class="studio-brand-wrap">
+          <a href="index.html" class="brand-wordmark brand-wordmark--compact" aria-label="Adri Sant'Anna Beauty — Ir para o site público">
+            <span class="wordmark-main">
+              <span class="wordmark-first">Adri</span>
+              <span class="wordmark-last">Sant<span class="wordmark-apostrophe" aria-hidden="true">’</span>Anna</span>
+            </span>
+            <span class="wordmark-sub">
+              <span class="wordmark-rule" aria-hidden="true"></span>
+              <span class="wordmark-beauty">Beauty</span>
+              <span class="wordmark-ornament" aria-hidden="true">
+                <svg viewBox="0 0 16 16" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1.2">
+                  <path d="M8 1.5C9.2 5.2 10.8 6.8 14.5 8C10.8 9.2 9.2 10.8 8 14.5C6.8 10.8 5.2 9.2 1.5 8C5.2 6.8 6.8 5.2 8 1.5Z"/>
+                </svg>
+              </span>
+              <span class="wordmark-rule" aria-hidden="true"></span>
+            </span>
+          </a>
+          <span class="studio-header-sep" aria-hidden="true"></span>
+          <h1 class="studio-heading">Estúdio de PDFs</h1>
+        </div>
+
+        <div class="studio-header-actions">
+          <div class="theme-switcher theme-switcher--header" role="group" aria-label="Estilo da folha">
+            <button type="button" class="theme-pill" data-theme-choice="clean" aria-pressed="true">Clínico Clean</button>
+            <button type="button" class="theme-pill" data-theme-choice="porcelana" aria-pressed="false">Porcelana</button>
+            <button type="button" class="theme-pill" data-theme-choice="editorial" aria-pressed="false">Editorial Verde</button>
+          </div>
+
+          <button type="button" class="btn btn-primary" id="exportPdfBtn">
+            <svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <path d="M10 3.5V12.5M10 12.5L6.5 9M10 12.5L13.5 9" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M4 14.5V16C4 16.55 4.45 17 5 17H15C15.55 17 16 16.55 16 16V14.5" stroke-linecap="round"/>
+            </svg>
+            <span class="btn-label">Baixar PDF</span>
+          </button>
+
+          <button type="button" class="btn btn-outline" id="printPdfBtn">
+            <svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <path d="M6 7V3.5H14V7M6 14H4.5C3.67 14 3 13.33 3 12.5V8.5C3 7.67 3.67 7 4.5 7H15.5C16.33 7 17 7.67 17 8.5V12.5C17 13.33 16.33 14 15.5 14H14" stroke-linecap="round" stroke-linejoin="round"/>
+              <rect x="6" y="11.5" width="8" height="5.5" rx="0.8"/>
+            </svg>
+            <span>Imprimir / Vetorial</span>
+          </button>
+
+          <button type="button" class="btn btn-ghost" id="lockStudioBtn">
+            <svg viewBox="0 0 20 20" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <rect x="4.5" y="9" width="11" height="8" rx="1.5"/>
+              <path d="M7 9V6.5C7 4.84 8.34 3.5 10 3.5C11.66 3.5 13 4.84 13 6.5V9" stroke-linecap="round"/>
+            </svg>
+            <span>Bloquear</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- ABAS MOBILE (EDITAR / VISUALIZAR PDF) -->
+    <nav class="mobile-view-bar" aria-label="Alternar visualização no celular">
+      <div class="tablist mobile-view-tablist" role="tablist" focusgroup="tablist nomemory" aria-label="Modo de visualização">
+        <button type="button" role="tab" class="tab-btn" id="tabViewEditor" data-view="editor" aria-selected="true" focusgroupstart>Editar Conteúdo</button>
+        <button type="button" role="tab" class="tab-btn" id="tabViewPreview" data-view="preview" aria-selected="false">Visualizar PDF</button>
+      </div>
+    </nav>
+
+    <main id="mainContent" class="studio-workspace">
+      <!-- COLUNA ESQUERDA: EDITOR -->
+      <section class="editor-panel" id="editorPanel" aria-label="Editor do material">
+        <div class="editor-top">
+          <div class="tablist model-tablist" role="tablist" focusgroup="tablist nomemory" aria-label="Escolher modelo de documento">
+            <button type="button" role="tab" class="tab-btn" id="tabModelPlano" data-model="plano" aria-selected="true" focusgroupstart>Plano &amp; Produtos</button>
+            <button type="button" role="tab" class="tab-btn" id="tabModelPos" data-model="pos" aria-selected="false">Pós-Procedimento</button>
+            <button type="button" role="tab" class="tab-btn" id="tabModelRotina" data-model="rotina" aria-selected="false">Rotina Home Care</button>
+            <button type="button" role="tab" class="tab-btn" id="tabModelLivre" data-model="livre" aria-selected="false">Documento Livre</button>
+          </div>
+
+          <div class="theme-switcher-mobile">
+            <span class="field-caption">Papelaria da folha</span>
+            <div class="theme-switcher" role="group" aria-label="Estilo da folha no celular">
+              <button type="button" class="theme-pill" data-theme-choice="clean" aria-pressed="true">Clínico Clean</button>
+              <button type="button" class="theme-pill" data-theme-choice="porcelana" aria-pressed="false">Porcelana</button>
+              <button type="button" class="theme-pill" data-theme-choice="editorial" aria-pressed="false">Editorial Verde</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- PAINEL 1: PLANO DE TRATAMENTO & HOME CARE -->
+        <div class="model-panel" id="panelModelPlano" role="tabpanel" aria-labelledby="tabModelPlano">
+          <div class="editor-section">
+            <h2 class="section-heading">Dados do plano</h2>
+            <div class="field-grid">
+              <div class="field-group field-span-2">
+                <label for="planoTitle">Título do documento</label>
+                <input type="text" id="planoTitle" value="Plano de Tratamento & Home Care">
+              </div>
+              <div class="field-group field-span-2">
+                <label for="planoSubtitle">Subtítulo</label>
+                <input type="text" id="planoSubtitle" value="Protocolo personalizado para a saúde e vitalidade da sua pele">
+              </div>
+              <div class="field-group">
+                <label for="planoClientName">Nome da cliente (opcional)</label>
+                <input type="text" id="planoClientName" placeholder="Ex.: Mariana Silva">
+              </div>
+              <div class="field-group">
+                <label for="planoDate">Data</label>
+                <input type="text" id="planoDate" placeholder="dd/mm/aaaa">
+              </div>
+              <div class="field-group field-span-2">
+                <label for="planoGoal">Foco / Objetivo da pele (opcional)</label>
+                <input type="text" id="planoGoal" placeholder="Ex.: Renovação celular, controle de oleosidade e estímulo de colágeno">
+              </div>
+            </div>
+          </div>
+
+          <div class="editor-section">
+            <div class="section-header-row">
+              <h2 class="section-heading">Indicação de procedimentos em clínica</h2>
+              <label class="toggle-field" for="planoIncludeProcedures">
+                <input type="checkbox" id="planoIncludeProcedures" checked>
+                <span>Exibir no PDF</span>
+              </label>
+            </div>
+
+            <div id="planoProceduresWrap">
+              <div class="quick-chips" role="group" aria-label="Adicionar procedimento rápido">
+                <button type="button" class="chip-btn" data-add-procedure="Limpeza de Pele Profunda" data-freq="2 sessões • 1x a cada 30 dias" data-notes="Higienização profunda, desobstrução dos poros e preparo biológico da pele.">+ Limpeza de Pele</button>
+                <button type="button" class="chip-btn" data-add-procedure="Microagulhamento Facial" data-freq="3 sessões • intervalo de 30 dias" data-notes="Estímulo de colágeno, uniformização da textura e viço natural.">+ Microagulhamento</button>
+                <button type="button" class="chip-btn" data-add-procedure="Fototerapia Laser & LED Fluence MAXX" data-freq="4 sessões • quinzenal" data-notes="Fotobiomodulação para ação calmante, reparação tecidual e luminosidade.">+ Fluence MAXX</button>
+                <button type="button" class="chip-btn" data-add-procedure="Peeling Renovador Personalizado" data-freq="2 sessões • a cada 21 dias" data-notes="Renovação suave para uniformizar o tom e afinar a textura cutânea.">+ Peeling</button>
+                <button type="button" class="chip-btn" data-add-procedure="Terapia Capilar" data-freq="4 sessões • quinzenal" data-notes="Higienização folicular e fototerapia LED para saúde do couro cabeludo.">+ Terapia Capilar</button>
+                <button type="button" class="chip-btn chip-btn--custom" data-add-procedure="" data-freq="" data-notes="">+ Outro</button>
+              </div>
+
+              <div class="dynamic-list" id="planoProceduresList"></div>
+            </div>
+          </div>
+
+          <div class="editor-section">
+            <div class="section-header-row">
+              <h2 class="section-heading">Produtos recomendados (Home Care)</h2>
+              <label class="toggle-field" for="planoIncludeProducts">
+                <input type="checkbox" id="planoIncludeProducts" checked>
+                <span>Exibir no PDF</span>
+              </label>
+            </div>
+
+            <div id="planoProductsWrap">
+              <div class="dynamic-list" id="planoProductsList"></div>
+
+              <div class="section-actions">
+                <button type="button" class="btn btn-outline btn-sm" id="addPlanoProductBtn">
+                  <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+                    <path d="M10 4.5V15.5M4.5 10H15.5" stroke-linecap="round"/>
+                  </svg>
+                  <span>Adicionar produto</span>
+                </button>
+              </div>
+
+              <label class="checkbox-field" for="planoClinicProductsNote">
+                <input type="checkbox" id="planoClinicProductsNote" checked>
+                <span>Exibir nota informando que os produtos estão disponíveis na clínica</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="editor-section">
+            <div class="field-group">
+              <label for="planoNotes">Observações da especialista (opcional)</label>
+              <textarea id="planoNotes" rows="3" placeholder="Orientações extras sobre a ordem dos cuidados, intervalos ou retorno."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- PAINEL 2: GUIA DE CUIDADOS PÓS-PROCEDIMENTO -->
+        <div class="model-panel" id="panelModelPos" role="tabpanel" aria-labelledby="tabModelPos" hidden>
+          <div class="editor-section">
+            <h2 class="section-heading">Modelos prontos de pós-procedimento</h2>
+            <p class="section-note">Toque em um guia pronto para carregar as orientações e editar livremente se desejar.</p>
+            <div class="preset-bar" role="group" aria-label="Carregar guia pós-procedimento pronto">
+              <button type="button" class="chip-btn" data-pos-preset="microagulhamento" aria-pressed="true">Microagulhamento</button>
+              <button type="button" class="chip-btn" data-pos-preset="limpeza" aria-pressed="false">Limpeza de Pele</button>
+              <button type="button" class="chip-btn" data-pos-preset="laser" aria-pressed="false">Laser Fluence MAXX</button>
+              <button type="button" class="chip-btn" data-pos-preset="peeling" aria-pressed="false">Peeling / Renovação</button>
+              <button type="button" class="chip-btn chip-btn--custom" data-pos-preset="branco" aria-pressed="false">Em branco</button>
+            </div>
+          </div>
+
+          <div class="editor-section">
+            <h2 class="section-heading">Cabeçalho do guia</h2>
+            <div class="field-grid">
+              <div class="field-group field-span-2">
+                <label for="posTitle">Título do guia</label>
+                <input type="text" id="posTitle">
+              </div>
+              <div class="field-group field-span-2">
+                <label for="posSubtitle">Subtítulo</label>
+                <input type="text" id="posSubtitle">
+              </div>
+              <div class="field-group">
+                <label for="posClientName">Nome da cliente (opcional)</label>
+                <input type="text" id="posClientName" placeholder="Deixe vazio para guia padrão">
+              </div>
+              <div class="field-group">
+                <label for="posDate">Data (opcional)</label>
+                <input type="text" id="posDate" placeholder="Ex.: 19/11/2026">
+              </div>
+            </div>
+          </div>
+
+          <div class="editor-section">
+            <div class="section-header-row">
+              <h2 class="section-heading">Blocos de orientações</h2>
+              <label class="field-inline" for="posNumberingStyle">
+                <span>Numeração</span>
+                <select id="posNumberingStyle">
+                  <option value="numeric">1, 2, 3...</option>
+                  <option value="roman">I, II, III...</option>
+                  <option value="none">Sem número</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="dynamic-list" id="posBlocksList"></div>
+
+            <div class="section-actions">
+              <button type="button" class="btn btn-outline btn-sm" id="addPosBlockBtn">
+                <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+                  <path d="M10 4.5V15.5M4.5 10H15.5" stroke-linecap="round"/>
+                </svg>
+                <span>Adicionar bloco de cuidado</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="editor-section">
+            <div class="field-group">
+              <label for="posAttention">Caixa de destaque “Atenção” (opcional)</label>
+              <span class="field-hint">Se deixar em branco, a caixa de atenção não aparece no PDF.</span>
+              <textarea id="posAttention" rows="3"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- PAINEL 3: ROTINA HOME CARE MANHÃ & NOITE -->
+        <div class="model-panel" id="panelModelRotina" role="tabpanel" aria-labelledby="tabModelRotina" hidden>
+          <div class="editor-section">
+            <h2 class="section-heading">Dados da rotina diária</h2>
+            <div class="field-grid">
+              <div class="field-group field-span-2">
+                <label for="rotinaTitle">Título do documento</label>
+                <input type="text" id="rotinaTitle">
+              </div>
+              <div class="field-group field-span-2">
+                <label for="rotinaSubtitle">Subtítulo</label>
+                <input type="text" id="rotinaSubtitle">
+              </div>
+              <div class="field-group">
+                <label for="rotinaClientName">Nome da cliente (opcional)</label>
+                <input type="text" id="rotinaClientName" placeholder="Ex.: Camila Ferreira">
+              </div>
+              <div class="field-group">
+                <label for="rotinaDate">Data</label>
+                <input type="text" id="rotinaDate" placeholder="dd/mm/aaaa">
+              </div>
+              <div class="field-group field-span-2">
+                <label for="rotinaGoal">Objetivo da rotina (opcional)</label>
+                <input type="text" id="rotinaGoal" placeholder="Ex.: Hidratação reparadora, proteção solar e viço">
+              </div>
+            </div>
+          </div>
+
+          <div class="editor-section">
+            <h2 class="section-heading">Rotina da Manhã</h2>
+            <div class="dynamic-list" id="rotinaMorningList"></div>
+            <div class="section-actions">
+              <button type="button" class="btn btn-outline btn-sm" id="addRotinaMorningBtn">
+                <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+                  <path d="M10 4.5V15.5M4.5 10H15.5" stroke-linecap="round"/>
+                </svg>
+                <span>Passo da manhã</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="editor-section">
+            <h2 class="section-heading">Rotina da Noite</h2>
+            <div class="dynamic-list" id="rotinaNightList"></div>
+            <div class="section-actions">
+              <button type="button" class="btn btn-outline btn-sm" id="addRotinaNightBtn">
+                <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+                  <path d="M10 4.5V15.5M4.5 10H15.5" stroke-linecap="round"/>
+                </svg>
+                <span>Passo da noite</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="editor-section">
+            <label class="checkbox-field" for="rotinaClinicProductsNote">
+              <input type="checkbox" id="rotinaClinicProductsNote" checked>
+              <span>Exibir nota informando que os produtos estão disponíveis na clínica</span>
+            </label>
+            <div class="field-group">
+              <label for="rotinaNotes">Observações da especialista (opcional)</label>
+              <textarea id="rotinaNotes" rows="3" placeholder="Cuidados complementares sobre quantidade, intervalo ou proteção solar."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- PAINEL 4: DOCUMENTO & ORIENTAÇÕES LIVRES -->
+        <div class="model-panel" id="panelModelLivre" role="tabpanel" aria-labelledby="tabModelLivre" hidden>
+          <div class="editor-section">
+            <h2 class="section-heading">Cabeçalho do documento livre</h2>
+            <div class="field-grid">
+              <div class="field-group field-span-2">
+                <label for="livreTitle">Título do documento</label>
+                <input type="text" id="livreTitle">
+              </div>
+              <div class="field-group field-span-2">
+                <label for="livreSubtitle">Subtítulo</label>
+                <input type="text" id="livreSubtitle">
+              </div>
+              <div class="field-group">
+                <label for="livreClientName">Nome da cliente (opcional)</label>
+                <input type="text" id="livreClientName" placeholder="Opcional">
+              </div>
+              <div class="field-group">
+                <label for="livreDate">Data (opcional)</label>
+                <input type="text" id="livreDate" placeholder="Opcional">
+              </div>
+            </div>
+          </div>
+
+          <div class="editor-section">
+            <h2 class="section-heading">Blocos de texto e tópicos</h2>
+            <div class="dynamic-list" id="livreBlocksList"></div>
+            <div class="section-actions">
+              <button type="button" class="btn btn-outline btn-sm" id="addLivreBlockBtn">
+                <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+                  <path d="M10 4.5V15.5M4.5 10H15.5" stroke-linecap="round"/>
+                </svg>
+                <span>Adicionar bloco</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="editor-section editor-section--stack">
+            <div class="field-group">
+              <label for="livreClosing">Frase de encerramento (opcional)</label>
+              <input type="text" id="livreClosing" placeholder="Ex.: Estamos à disposição para maiores esclarecimentos.">
+            </div>
+            <div class="field-group">
+              <label for="livreCallout">Observação ou destaque final (opcional)</label>
+              <textarea id="livreCallout" rows="3" placeholder="Mensagem importante em destaque no final da folha."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- MENSAGEM PRONTA PARA WHATSAPP -->
+        <div class="editor-section whatsapp-section">
+          <div class="field-group">
+            <div class="whatsapp-label-row">
+              <label for="whatsappMessageOutput">Mensagem pronta para enviar com o PDF no WhatsApp</label>
+              <button type="button" class="btn-link btn-link--xs" id="regenerateWhatsappBtn" hidden>Voltar ao texto sugerido</button>
+            </div>
+            <span class="field-hint">Atualiza automaticamente conforme o modelo e o nome da cliente. Você pode editar antes de copiar.</span>
+            <textarea id="whatsappMessageOutput" rows="4"></textarea>
+          </div>
+
+          <div class="whatsapp-actions">
+            <span class="copy">
+              <button type="button" class="btn btn-outline copy-button" id="desktopCopyWhatsappBtn" command="--copy" commandfor="whatsappMessageOutput">
+                <span class="copy-icon copy-icon--copy" aria-hidden="true">
+                  <svg viewBox="0 0 20 20" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect x="7" y="7" width="9" height="10" rx="1.5"/>
+                    <path d="M4.5 13H4C3.45 13 3 12.55 3 12V4C3 3.45 3.45 3 4 3H12C12.55 3 13 3.45 13 4V4.5" stroke-linecap="round"/>
+                  </svg>
+                </span>
+                <span class="copy-icon copy-icon--check" aria-hidden="true">
+                  <svg viewBox="0 0 20 20" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7">
+                    <path d="M4.5 10.5L8.2 14.2L15.5 6.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+                <span>Copiar mensagem</span>
+              </button>
+              <span class="copy-tip" role="status"></span>
+            </span>
+          </div>
+        </div>
+
+        <!-- RODAPÉ DISCRETO DO EDITOR -->
+        <div class="editor-meta">
+          <span class="autosave-status" id="autosaveStatus">Rascunho salvo automaticamente</span>
+          <div class="reset-inline">
+            <button type="button" class="btn-link" id="resetTemplateBtn">Restaurar exemplo padrão</button>
+            <div class="reset-confirm" id="resetConfirmGroup" hidden>
+              <button type="button" class="btn-link btn-link--danger" id="confirmResetBtn">Confirmar restauração</button>
+              <button type="button" class="btn-link" id="cancelResetBtn">Cancelar</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- COLUNA DIREITA: PRÉVIA A4 AO VIVO -->
+      <section class="preview-panel" id="previewPanel" aria-label="Prévia do documento em formato A4">
+        <div class="preview-toolbar">
+          <div class="preview-meta">
+            <span class="preview-badge" id="pageEstimateBadge">Folha A4 • 1 página</span>
+            <span class="preview-filename" id="previewFilenameBadge">Adri-SantAnna-Plano.pdf</span>
+          </div>
+        </div>
+
+        <div class="a4-stage" id="a4Stage">
+          <div class="a4-scale-box" id="a4ScaleBox">
+            <article id="pdfDocument" class="a4-sheet" data-theme="clean" aria-label="Prévia da folha A4 impressa"></article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- BARRA FIXA INFERIOR NO CELULAR -->
+    <div class="mobile-action-bar" id="mobileActionBar">
+      <button type="button" class="btn btn-primary" id="mobileExportPdfBtn">
+        <svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <path d="M10 3.5V12.5M10 12.5L6.5 9M10 12.5L13.5 9" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M4 14.5V16C4 16.55 4.45 17 5 17H15C15.55 17 16 16.55 16 16V14.5" stroke-linecap="round"/>
+        </svg>
+        <span class="btn-label">Baixar / Enviar PDF</span>
+      </button>
+
+      <span class="copy copy--compact">
+        <button type="button" class="btn btn-outline copy-button" id="mobileCopyWhatsappBtn" command="--copy" commandfor="whatsappMessageOutput">
+          <span class="copy-icon copy-icon--copy" aria-hidden="true">
+            <svg viewBox="0 0 20 20" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="7" y="7" width="9" height="10" rx="1.5"/>
+              <path d="M4.5 13H4C3.45 13 3 12.55 3 12V4C3 3.45 3.45 3 4 3H12C12.55 3 13 3.45 13 4V4.5" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span class="copy-icon copy-icon--check" aria-hidden="true">
+            <svg viewBox="0 0 20 20" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7">
+              <path d="M4.5 10.5L8.2 14.2L15.5 6.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span>Copiar WhatsApp</span>
+        </button>
+        <span class="copy-tip" role="status"></span>
+      </span>
+    </div>
+  </div>
+
+  <p class="visually-hidden">Avisos do estúdio de materiais</p>
+  <div id="studioStatus" class="visually-hidden" aria-live="polite"></div>
+
+  <script src="materiais.js" defer></script>
+</body>
+</html>
