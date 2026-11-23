@@ -771,12 +771,68 @@ input:is(:user-invalid, .is-invalid) + .field-error {
   min-width: 0;
   background-color: var(--bg-card-warm);
   border-right: 1px solid var(--champagne-line);
-  padding: 1.15rem 1.35rem 2rem;
+  padding: 1.15rem 1.35rem 2.25rem;
 }
 
 .editor-top {
   min-width: 0;
   margin-bottom: 1.15rem;
+}
+
+.quick-guide {
+  margin-bottom: 0.75rem;
+  padding: 0.58rem 0.78rem;
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-almond);
+  border: 1px solid var(--champagne-line);
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: var(--ink-secondary);
+}
+
+.quick-guide strong {
+  color: var(--clinic-green-deep);
+}
+
+.model-helper {
+  margin-top: 0.65rem;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  color: var(--clinic-green-deep);
+}
+
+.editor-mobile-cta {
+  display: none;
+}
+
+@media (min-width: 64rem) {
+  .studio-app {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  .studio-header {
+    position: static;
+    flex: 0 0 auto;
+  }
+
+  .studio-workspace {
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .editor-panel,
+  .preview-panel {
+    height: 100%;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    scrollbar-gutter: stable;
+  }
 }
 
 .editor-section {
@@ -1059,18 +1115,17 @@ input:is(:user-invalid, .is-invalid) + .field-error {
    ========================================================================== */
 
 .preview-panel {
-  position: sticky;
-  top: 4.15rem;
-  min-height: calc(100dvh - 4.15rem);
   padding: 1.25rem 1.5rem 2.5rem;
   background-color: var(--bg-stage);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.95rem;
+  overflow-x: hidden;
 }
 
 .preview-toolbar {
+  flex: 0 0 auto;
   width: 100%;
   max-width: 49.625rem;
   display: flex;
@@ -1098,20 +1153,42 @@ input:is(:user-invalid, .is-invalid) + .field-error {
   color: var(--clinic-green-deep);
 }
 
-.preview-filename {
+.preview-hint {
   font-size: 0.84rem;
   color: var(--ink-secondary);
-  overflow-wrap: anywhere;
 }
 
 .a4-stage {
+  flex: 0 0 auto;
   width: 100%;
   min-width: 0;
-  overflow: hidden;
+  overflow: visible;
   padding-bottom: 2rem;
   display: flex;
   justify-content: center;
   align-items: flex-start;
+}
+
+.a4-pages-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.a4-page-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  max-width: 100%;
+}
+
+.a4-page-label {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--ink-secondary);
 }
 
 .a4-scale-box {
@@ -1132,7 +1209,9 @@ input:is(:user-invalid, .is-invalid) + .field-error {
 
 .a4-sheet {
   width: 794px;
+  height: 1123px;
   min-height: 1123px;
+  overflow: hidden;
   transform-origin: top left;
   background-color: #FBF7F7;
   color: #25201E;
@@ -1773,6 +1852,11 @@ input:is(:user-invalid, .is-invalid) + .field-error {
     padding: 1.15rem 1rem;
   }
 
+  .editor-mobile-cta {
+    display: block;
+    margin-top: 1.15rem;
+  }
+
   .preview-panel {
     position: static;
     top: auto;
@@ -1857,6 +1941,8 @@ input:is(:user-invalid, .is-invalid) + .field-error {
   .preview-panel {
     display: block !important;
     position: static !important;
+    height: auto !important;
+    overflow: visible !important;
     padding: 0 !important;
     margin: 0 !important;
     background: #FFFFFF !important;
@@ -1865,11 +1951,28 @@ input:is(:user-invalid, .is-invalid) + .field-error {
   }
 
   .a4-stage,
+  .a4-pages-list,
   .a4-scale-box {
     display: block !important;
     width: auto !important;
     height: auto !important;
     transform: none !important;
+    padding: 0 !important;
+  }
+
+  .a4-page-label {
+    display: none !important;
+  }
+
+  .a4-page-slot {
+    display: block !important;
+    break-after: page;
+    page-break-after: always;
+  }
+
+  .a4-page-slot:last-child {
+    break-after: auto;
+    page-break-after: auto;
   }
 
   .a4-scale-box .a4-sheet {
@@ -1878,6 +1981,7 @@ input:is(:user-invalid, .is-invalid) + .field-error {
 
   .a4-sheet {
     width: 210mm !important;
+    height: 297mm !important;
     min-height: 297mm !important;
     transform: none !important;
     box-shadow: none !important;

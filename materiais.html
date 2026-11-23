@@ -133,7 +133,7 @@
               <path d="M6 7V3.5H14V7M6 14H4.5C3.67 14 3 13.33 3 12.5V8.5C3 7.67 3.67 7 4.5 7H15.5C16.33 7 17 7.67 17 8.5V12.5C17 13.33 16.33 14 15.5 14H14" stroke-linecap="round" stroke-linejoin="round"/>
               <rect x="6" y="11.5" width="8" height="5.5" rx="0.8"/>
             </svg>
-            <span>Imprimir / Vetorial</span>
+            <span>Imprimir</span>
           </button>
 
           <button type="button" class="btn btn-ghost" id="lockStudioBtn">
@@ -147,11 +147,11 @@
       </div>
     </header>
 
-    <!-- ABAS MOBILE (EDITAR / VISUALIZAR PDF) -->
+    <!-- ABAS MOBILE (EDITAR / VER PDF) -->
     <nav class="mobile-view-bar" aria-label="Alternar visualização no celular">
       <div class="tablist mobile-view-tablist" role="tablist" focusgroup="tablist nomemory" aria-label="Modo de visualização">
-        <button type="button" role="tab" class="tab-btn" id="tabViewEditor" data-view="editor" aria-selected="true" focusgroupstart>Editar Conteúdo</button>
-        <button type="button" role="tab" class="tab-btn" id="tabViewPreview" data-view="preview" aria-selected="false">Visualizar PDF</button>
+        <button type="button" role="tab" class="tab-btn" id="tabViewEditor" data-view="editor" aria-selected="true" focusgroupstart>1. Editar</button>
+        <button type="button" role="tab" class="tab-btn" id="tabViewPreview" data-view="preview" aria-selected="false">2. Ver PDF</button>
       </div>
     </nav>
 
@@ -159,6 +159,8 @@
       <!-- COLUNA ESQUERDA: EDITOR -->
       <section class="editor-panel" id="editorPanel" aria-label="Editor do material">
         <div class="editor-top">
+          <p class="quick-guide">Escolha o modelo, preencha os campos e clique em <strong>Baixar PDF</strong>. Ao lado você vê exatamente como cada folha vai ficar.</p>
+
           <div class="tablist model-tablist" role="tablist" focusgroup="tablist nomemory" aria-label="Escolher modelo de documento">
             <button type="button" role="tab" class="tab-btn" id="tabModelPlano" data-model="plano" aria-selected="true" focusgroupstart>Plano &amp; Produtos</button>
             <button type="button" role="tab" class="tab-btn" id="tabModelPos" data-model="pos" aria-selected="false">Pós-Procedimento</button>
@@ -166,8 +168,10 @@
             <button type="button" role="tab" class="tab-btn" id="tabModelLivre" data-model="livre" aria-selected="false">Documento Livre</button>
           </div>
 
+          <p class="model-helper" id="modelHelperText">Monte a indicação de sessões na clínica e os produtos para uso em casa.</p>
+
           <div class="theme-switcher-mobile">
-            <span class="field-caption">Papelaria da folha</span>
+            <span class="field-caption">Estilo da folha</span>
             <div class="theme-switcher" role="group" aria-label="Estilo da folha no celular">
               <button type="button" class="theme-pill" data-theme-choice="clean" aria-pressed="true">Clínico Clean</button>
               <button type="button" class="theme-pill" data-theme-choice="porcelana" aria-pressed="false">Porcelana</button>
@@ -481,6 +485,15 @@
         </div>
 
         <!-- RODAPÉ DISCRETO DO EDITOR -->
+        <div class="editor-mobile-cta">
+          <button type="button" class="btn btn-primary btn-full" id="jumpToPreviewBtn">
+            <span>Ver como ficou o PDF</span>
+            <svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <path d="M4 10H16M16 10L11 5M16 10L11 15" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+
         <div class="editor-meta">
           <span class="autosave-status" id="autosaveStatus">Rascunho salvo automaticamente</span>
           <div class="reset-inline">
@@ -497,15 +510,13 @@
       <section class="preview-panel" id="previewPanel" aria-label="Prévia do documento em formato A4">
         <div class="preview-toolbar">
           <div class="preview-meta">
-            <span class="preview-badge" id="pageEstimateBadge">Folha A4 • 1 página</span>
-            <span class="preview-filename" id="previewFilenameBadge">Adri-SantAnna-Plano.pdf</span>
+            <span class="preview-badge" id="pageEstimateBadge">Prévia real do PDF • 1 página</span>
+            <span class="preview-hint" id="previewHintText">O PDF baixado sai idêntico às folhas abaixo.</span>
           </div>
         </div>
 
         <div class="a4-stage" id="a4Stage">
-          <div class="a4-scale-box" id="a4ScaleBox">
-            <article id="pdfDocument" class="a4-sheet" data-theme="clean" aria-label="Prévia da folha A4 impressa"></article>
-          </div>
+          <div class="a4-pages-list" id="a4PagesList"></div>
         </div>
       </section>
     </main>

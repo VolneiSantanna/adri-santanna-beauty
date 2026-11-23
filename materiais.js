@@ -386,10 +386,11 @@
   const editorPanel = document.getElementById('editorPanel');
   const previewPanel = document.getElementById('previewPanel');
   const a4Stage = document.getElementById('a4Stage');
-  const a4ScaleBox = document.getElementById('a4ScaleBox');
-  const pdfDocument = document.getElementById('pdfDocument');
+  const a4PagesList = document.getElementById('a4PagesList');
   const pageEstimateBadge = document.getElementById('pageEstimateBadge');
-  const previewFilenameBadge = document.getElementById('previewFilenameBadge');
+  const previewHintText = document.getElementById('previewHintText');
+  const modelHelperText = document.getElementById('modelHelperText');
+  const jumpToPreviewBtn = document.getElementById('jumpToPreviewBtn');
   const autosaveStatus = document.getElementById('autosaveStatus');
   const studioStatus = document.getElementById('studioStatus');
 
@@ -714,6 +715,13 @@
     updateWhatsappMessage();
   });
 
+  const MODEL_HELPERS = {
+    plano: 'Para indicar sessões na clínica e os produtos para a cliente usar em casa.',
+    pos: 'Guias prontos de cuidados após o atendimento — escolha um modelo ou edite.',
+    rotina: 'Passo a passo organizado da manhã e da noite para a cliente seguir em casa.',
+    livre: 'Folha livre para informativos ou textos corridos. Aperte Enter para separar os parágrafos.',
+  };
+
   function syncActiveModelUI() {
     const activeTab = modelTabs.find((t) => t.dataset.model === state.activeModel) || modelTabs[0];
     if (activeTab) {
@@ -722,10 +730,24 @@
     for (const [key, panel] of Object.entries(modelPanels)) {
       if (panel) panel.hidden = key !== state.activeModel;
     }
+    if (modelHelperText && MODEL_HELPERS[state.activeModel]) {
+      modelHelperText.textContent = MODEL_HELPERS[state.activeModel];
+    }
   }
 
+  jumpToPreviewBtn?.addEventListener('click', () => {
+    const previewTab = document.getElementById('tabViewPreview');
+    if (previewTab && mobileViewTablist) {
+      activateTab(mobileViewTablist, mobileViewTabs, previewTab);
+    }
+    mobileViewMode = 'preview';
+    applyLayoutMode();
+    window.scrollTo({ top: 0, behavior: 'auto' });
+    updatePreviewScale();
+  });
+
   // =========================================================================
-  // Seletor de Estilo da Folha (Clássico Porcelana / Editorial Verde)
+  // Seletor de Estilo da Folha (Clínico Clean / Porcelana / Editorial Verde)
   // =========================================================================
 
   const themeButtons = Array.from(document.querySelectorAll('[data-theme-choice]'));
@@ -735,7 +757,9 @@
       const selected = btn.dataset.themeChoice === state.theme;
       btn.setAttribute('aria-pressed', String(selected));
     }
-    pdfDocument.setAttribute('data-theme', state.theme);
+    a4PagesList?.querySelectorAll('.a4-sheet').forEach((sheet) => {
+      sheet.setAttribute('data-theme', state.theme);
+    });
   }
 
   themeButtons.forEach((btn) => {
@@ -997,7 +1021,8 @@
           key: 'content',
           label: 'Conteúdo',
           type: 'textarea',
-          rows: 3,
+          rows: 5,
+          hint: 'Aperte Enter para separar os parágrafos — se ficar longo, o PDF divide as páginas sozinho.',
           placeholder: 'Escreva o conteúdo deste bloco...',
           full: true,
         },
@@ -1743,49 +1768,350 @@
     return theme === 'clean' ? SVG_ICONS.watermark : '';
   }
 
-  function renderDocument() {
-    if (!pdfDocument) return;
-    pdfDocument.setAttribute('data-theme', state.theme);
-    pdfDocument.innerHTML = `
-      ${buildWatermarkHtml(state.theme)}
-      ${buildLetterheadHtml(state.theme, false)}
-      <div class="doc-body">
-        ${buildDocumentSectionsHtml()}
-      </div>
-      ${buildFooterHtml(1, 1)}
+  function createPageShell(theme, compactHeader, reservePageTag = false) {
+    const page = document.createElement('article');
+    page.className = 'a4-sheet';
+    page.setAttribute('data-theme', theme);
+    page.setAttribute('aria-label', 'Folha A4 do documento');
+    page.style.width = `${A4_WIDTH_PX}px`;
+    page.style.height = `${A4_HEIGHT_PX}px`;
+    page.style.minHeight = `${A4_HEIGHT_PX}px`;
+    page.innerHTML = `
+      ${buildWatermarkHtml(theme)}
+      ${buildLetterheadHtml(theme, compactHeader)}
+      <div class="doc-body"></div>
+      ${buildFooterHtml(1, reservePageTag ? 2 : 1)}
     `;
+    return page;
+  }
 
-    if (previewFilenameBadge) {
-      previewFilenameBadge.textContent = buildPdfFilename();
+  function makeNumberedSlice(secTitle, listClass, itemNumHtml, headingHtml, innerEl, { isLastOfSection, isLastOfItem }) {
+    const slice = document.createElement('section');
+    slice.className = 'doc-section';
+    slice.style.marginBottom = isLastOfSection ? '14px' : '6px';
+    if (secTitle) slice.append(secTitle.cloneNode(true));
+
+    const wrap = document.createElement('div');
+    wrap.className = listClass;
+
+    const item = document.createElement('div');
+    item.className = 'doc-numbered-item';
+    if (!isLastOfItem) {
+      item.style.paddingBottom = '0';
+      item.style.borderBottom = '0';
+    }
+    if (itemNumHtml) {
+      const numDiv = document.createElement('div');
+      numDiv.className = 'doc-item-num';
+      numDiv.innerHTML = itemNumHtml;
+      item.append(numDiv);
+    }
+
+    const content = document.createElement('div');
+    content.className = 'doc-item-content';
+    if (headingHtml) {
+      content.insertAdjacentHTML('beforeend', headingHtml);
+    }
+    content.append(innerEl);
+    item.append(content);
+    wrap.append(item);
+    slice.append(wrap);
+    return slice;
+  }
+
+  function splitIntoAtomicUnits(sourceBody) {
+    const units = [];
+
+    Array.from(sourceBody.children).forEach((child) => {
+      if (!child.classList.contains('doc-section')) {
+        units.push(child.cloneNode(true));
+        return;
+      }
+
+      const secTitle = child.querySelector('.doc-section-title');
+      const entriesWrap = child.querySelector('.doc-entries');
+      const numberedWrap = child.querySelector('.doc-numbered-list');
+
+      if (entriesWrap) {
+        const items = Array.from(entriesWrap.children);
+        items.forEach((entryEl, idx) => {
+          const slice = document.createElement('section');
+          slice.className = 'doc-section';
+          slice.style.marginBottom = idx === items.length - 1 ? '14px' : '6px';
+          if (idx === 0 && secTitle) slice.append(secTitle.cloneNode(true));
+          const wrap = document.createElement('div');
+          wrap.className = 'doc-entries';
+          wrap.append(entryEl.cloneNode(true));
+          slice.append(wrap);
+          units.push(slice);
+        });
+        const extraCallout = child.querySelector('.doc-callout');
+        if (extraCallout) units.push(extraCallout.cloneNode(true));
+        return;
+      }
+
+      if (numberedWrap) {
+        const items = Array.from(numberedWrap.children);
+        let sectionTitlePending = secTitle;
+
+        items.forEach((itemEl, itemIdx) => {
+          const numEl = itemEl.querySelector('.doc-item-num');
+          const headingEl = itemEl.querySelector('.doc-item-heading');
+          const proseEl = itemEl.querySelector('.doc-prose');
+          const bulletsEl = itemEl.querySelector('.doc-bullets');
+          const isLastItemInList = itemIdx === items.length - 1;
+
+          if (proseEl) {
+            const paragraphs = Array.from(proseEl.querySelectorAll('p'));
+            if (paragraphs.length > 0) {
+              paragraphs.forEach((pEl, pIdx) => {
+                const isFirstP = pIdx === 0;
+                const isLastP = pIdx === paragraphs.length - 1;
+                const proseBox = document.createElement('div');
+                proseBox.className = 'doc-prose';
+                proseBox.append(pEl.cloneNode(true));
+
+                const numContent = numEl ? (isFirstP ? numEl.innerHTML : '&nbsp;') : '';
+                const headContent = isFirstP && headingEl ? headingEl.outerHTML : '';
+                const slice = makeNumberedSlice(
+                  sectionTitlePending,
+                  'doc-numbered-list',
+                  numContent,
+                  headContent,
+                  proseBox,
+                  {
+                    isLastOfSection: isLastItemInList && isLastP,
+                    isLastOfItem: isLastP && !isLastItemInList,
+                  }
+                );
+                sectionTitlePending = null;
+                units.push(slice);
+              });
+              return;
+            }
+          }
+
+          if (bulletsEl) {
+            const lis = Array.from(bulletsEl.querySelectorAll('li'));
+            if (lis.length > 0) {
+              lis.forEach((liEl, liIdx) => {
+                const isFirstLi = liIdx === 0;
+                const isLastLi = liIdx === lis.length - 1;
+                const ulBox = document.createElement('ul');
+                ulBox.className = 'doc-bullets';
+                ulBox.append(liEl.cloneNode(true));
+
+                const numContent = numEl ? (isFirstLi ? numEl.innerHTML : '&nbsp;') : '';
+                const headContent = isFirstLi && headingEl ? headingEl.outerHTML : '';
+                const slice = makeNumberedSlice(
+                  sectionTitlePending,
+                  'doc-numbered-list',
+                  numContent,
+                  headContent,
+                  ulBox,
+                  {
+                    isLastOfSection: isLastItemInList && isLastLi,
+                    isLastOfItem: isLastLi && !isLastItemInList,
+                  }
+                );
+                sectionTitlePending = null;
+                units.push(slice);
+              });
+              return;
+            }
+          }
+
+          const slice = document.createElement('section');
+          slice.className = 'doc-section';
+          slice.style.marginBottom = isLastItemInList ? '14px' : '6px';
+          if (sectionTitlePending) {
+            slice.append(sectionTitlePending.cloneNode(true));
+            sectionTitlePending = null;
+          }
+          const wrap = document.createElement('div');
+          wrap.className = 'doc-numbered-list';
+          const itemClone = itemEl.cloneNode(true);
+          if (isLastItemInList) {
+            itemClone.style.paddingBottom = '0';
+            itemClone.style.borderBottom = '0';
+          }
+          wrap.append(itemClone);
+          slice.append(wrap);
+          units.push(slice);
+        });
+        return;
+      }
+
+      units.push(child.cloneNode(true));
+    });
+
+    return units;
+  }
+
+  function splitOversizedParagraphUnit(unit, currentPage, currentBody) {
+    const pEl = unit.querySelector('.doc-prose p');
+    if (!pEl) return null;
+    const words = pEl.textContent.trim().split(/\s+/);
+    if (words.length < 2) return null;
+
+    let low = 1;
+    let high = words.length - 1;
+    let bestFit = 0;
+
+    while (low <= high) {
+      const mid = Math.floor((low + high) / 2);
+      pEl.textContent = words.slice(0, mid).join(' ');
+      if (currentPage.scrollHeight <= A4_HEIGHT_PX) {
+        bestFit = mid;
+        low = mid + 1;
+      } else {
+        high = mid - 1;
+      }
+    }
+
+    if (bestFit <= 0) {
+      pEl.textContent = words.join(' ');
+      return null;
+    }
+
+    pEl.textContent = words.slice(0, bestFit).join(' ');
+    const remainderUnit = unit.cloneNode(true);
+    const remTitle = remainderUnit.querySelector('.doc-section-title');
+    if (remTitle) remTitle.remove();
+    const remHead = remainderUnit.querySelector('.doc-item-heading');
+    if (remHead) remHead.remove();
+    const remNum = remainderUnit.querySelector('.doc-item-num');
+    if (remNum) remNum.innerHTML = '&nbsp;';
+    const remP = remainderUnit.querySelector('.doc-prose p');
+    if (remP) remP.textContent = words.slice(bestFit).join(' ');
+    return remainderUnit;
+  }
+
+  function buildPaginatedSheetElements(theme) {
+    const sandbox = document.createElement('div');
+    sandbox.style.cssText = 'position:fixed;left:-12000px;top:0;width:794px;pointer-events:none;z-index:-1;';
+    document.body.append(sandbox);
+
+    const measureSheet = createPageShell(theme, false, false);
+    measureSheet.style.height = 'auto';
+    measureSheet.querySelector('.doc-body').innerHTML = buildDocumentSectionsHtml();
+    sandbox.append(measureSheet);
+
+    // 1. Verifica se cabe confortavelmente em 1 única página A4
+    if (measureSheet.scrollHeight <= A4_HEIGHT_PX) {
+      measureSheet.style.height = `${A4_HEIGHT_PX}px`;
+      return { sandbox, pages: [measureSheet] };
+    }
+
+    // 2. Paginação automática em múltiplas folhas A4 (já reservando espaço do rodapé "Página X de Y")
+    const atomicUnits = splitIntoAtomicUnits(measureSheet.querySelector('.doc-body'));
+    const pages = [];
+    let currentPage = createPageShell(theme, false, true);
+    sandbox.append(currentPage);
+    let currentBody = currentPage.querySelector('.doc-body');
+
+    let i = 0;
+    while (i < atomicUnits.length) {
+      const unit = atomicUnits[i];
+      currentBody.append(unit);
+
+      if (currentPage.scrollHeight > A4_HEIGHT_PX) {
+        if (currentBody.children.length > 1) {
+          unit.remove();
+          pages.push(currentPage);
+
+          currentPage = createPageShell(theme, true, true);
+          sandbox.append(currentPage);
+          currentBody = currentPage.querySelector('.doc-body');
+          continue;
+        }
+
+        // Caso um único parágrafo gigante sem Enter exceda a folha inteira sozinho
+        const remainder = splitOversizedParagraphUnit(unit, currentPage, currentBody);
+        if (remainder) {
+          pages.push(currentPage);
+          currentPage = createPageShell(theme, true, true);
+          sandbox.append(currentPage);
+          currentBody = currentPage.querySelector('.doc-body');
+          atomicUnits.splice(i + 1, 0, remainder);
+        }
+      }
+      i += 1;
+    }
+
+    pages.push(currentPage);
+
+    const total = pages.length;
+    pages.forEach((pageEl, idx) => {
+      const footer = pageEl.querySelector('.doc-footer');
+      if (footer) {
+        footer.outerHTML = buildFooterHtml(idx + 1, total);
+      }
+    });
+
+    measureSheet.remove();
+    return { sandbox, pages };
+  }
+
+  function renderDocument() {
+    if (!a4PagesList) return;
+
+    const { sandbox, pages } = buildPaginatedSheetElements(state.theme);
+    a4PagesList.innerHTML = '';
+
+    pages.forEach((sheet, idx) => {
+      const slot = document.createElement('div');
+      slot.className = 'a4-page-slot';
+
+      if (pages.length > 1) {
+        const label = document.createElement('span');
+        label.className = 'a4-page-label';
+        label.textContent = `Página ${idx + 1} de ${pages.length}`;
+        slot.append(label);
+      }
+
+      const scaleBox = document.createElement('div');
+      scaleBox.className = 'a4-scale-box';
+      scaleBox.append(sheet);
+      slot.append(scaleBox);
+      a4PagesList.append(slot);
+    });
+
+    sandbox.remove();
+
+    if (pageEstimateBadge) {
+      pageEstimateBadge.textContent =
+        pages.length === 1
+          ? 'Prévia real do PDF • 1 página'
+          : `Prévia real do PDF • ${pages.length} páginas`;
+    }
+    if (previewHintText) {
+      previewHintText.textContent =
+        pages.length === 1
+          ? 'O PDF baixado sai idêntico à folha abaixo.'
+          : 'Divisão automática entre folhas: o PDF baixado sai igual.';
     }
 
     if (!state.whatsappCustomEdited) {
       updateWhatsappMessage();
     }
 
-    requestAnimationFrame(() => {
-      updatePageEstimate();
-      updatePreviewScale();
-    });
-  }
-
-  function updatePageEstimate() {
-    if (!pdfDocument || !pageEstimateBadge) return;
-    const rawHeight = pdfDocument.scrollHeight;
-    const pages = Math.max(1, Math.ceil((rawHeight - 16) / A4_HEIGHT_PX));
-    pageEstimateBadge.textContent =
-      pages === 1 ? 'Folha A4 • 1 página' : `Folha A4 • ${pages} páginas (paginação automática ao baixar)`;
+    requestAnimationFrame(updatePreviewScale);
   }
 
   function updatePreviewScale() {
-    if (!a4Stage || !a4ScaleBox || !pdfDocument || studioApp.hidden) return;
+    if (!a4Stage || !a4PagesList || studioApp.hidden) return;
     const available = a4Stage.clientWidth;
     if (!available) return;
     const scale = Math.min(1, available / A4_WIDTH_PX);
-    const sheetHeight = Math.max(A4_HEIGHT_PX, pdfDocument.scrollHeight);
-    pdfDocument.style.transform = scale < 1 ? `scale(${scale})` : 'none';
-    a4ScaleBox.style.width = `${Math.round(A4_WIDTH_PX * scale)}px`;
-    a4ScaleBox.style.height = `${Math.round(sheetHeight * scale)}px`;
+
+    a4PagesList.querySelectorAll('.a4-scale-box').forEach((scaleBox) => {
+      const sheet = scaleBox.querySelector('.a4-sheet');
+      if (!sheet) return;
+      sheet.style.transform = scale < 1 ? `scale(${scale})` : 'none';
+      scaleBox.style.width = `${Math.round(A4_WIDTH_PX * scale)}px`;
+      scaleBox.style.height = `${Math.round(A4_HEIGHT_PX * scale)}px`;
+    });
   }
 
   if (typeof ResizeObserver === 'function' && a4Stage) {
@@ -1796,7 +2122,7 @@
   }
 
   // =========================================================================
-  // Exportação Dual de PDF: Baixar / Compartilhar (Canvas -> jsPDF) + Impressão Vetorial
+  // Exportação Dual de PDF: Baixar / Enviar (Canvas -> jsPDF) + Impressão
   // =========================================================================
 
   function loadExternalScript(src, globalCheck) {
@@ -1843,109 +2169,6 @@
     });
   }
 
-  function createExportPageShell(theme, compactHeader) {
-    const page = document.createElement('div');
-    page.className = 'a4-sheet';
-    page.setAttribute('data-theme', theme);
-    page.style.width = `${A4_WIDTH_PX}px`;
-    page.style.height = `${A4_HEIGHT_PX}px`;
-    page.style.minHeight = `${A4_HEIGHT_PX}px`;
-    page.style.boxShadow = 'none';
-    page.style.transform = 'none';
-    page.innerHTML = `
-      ${buildWatermarkHtml(theme)}
-      ${buildLetterheadHtml(theme, compactHeader)}
-      <div class="doc-body"></div>
-      ${buildFooterHtml(1, 1)}
-    `;
-    return page;
-  }
-
-  function buildPaginatedExportSheets() {
-    const sandbox = document.createElement('div');
-    sandbox.style.cssText = 'position:fixed;left:-12000px;top:0;width:794px;pointer-events:none;z-index:-1;';
-    document.body.append(sandbox);
-
-    const measureSheet = createExportPageShell(state.theme, false);
-    measureSheet.style.height = 'auto';
-    measureSheet.querySelector('.doc-body').innerHTML = buildDocumentSectionsHtml();
-    sandbox.append(measureSheet);
-
-    // Verifica primeiro se cabe confortavelmente em 1 página
-    const fullHeight = measureSheet.scrollHeight;
-    if (fullHeight <= A4_HEIGHT_PX) {
-      measureSheet.style.height = `${A4_HEIGHT_PX}px`;
-      return {
-        sandbox,
-        pages: [measureSheet],
-      };
-    }
-
-    // Divide seções/itens de forma inteligente sem cortar blocos no meio
-    const sourceBody = measureSheet.querySelector('.doc-body');
-    const atomicUnits = [];
-
-    Array.from(sourceBody.children).forEach((child) => {
-      const entriesWrap = child.querySelector('.doc-entries, .doc-numbered-list');
-      const secTitle = child.querySelector('.doc-section-title');
-      if (child.classList.contains('doc-section') && entriesWrap && entriesWrap.children.length > 1) {
-        const listTag = entriesWrap.classList.contains('doc-numbered-list') ? 'doc-numbered-list' : 'doc-entries';
-        const items = Array.from(entriesWrap.children);
-        items.forEach((item, idx) => {
-          const slice = document.createElement('section');
-          slice.className = 'doc-section';
-          slice.style.marginBottom = idx === items.length - 1 ? '18px' : '8px';
-          if (idx === 0 && secTitle) {
-            slice.append(secTitle.cloneNode(true));
-          }
-          const wrap = document.createElement('div');
-          wrap.className = listTag;
-          wrap.append(item.cloneNode(true));
-          slice.append(wrap);
-          atomicUnits.push(slice);
-        });
-        const extraCallout = child.querySelector('.doc-callout');
-        if (extraCallout) atomicUnits.push(extraCallout.cloneNode(true));
-      } else {
-        atomicUnits.push(child.cloneNode(true));
-      }
-    });
-
-    const pages = [];
-    let currentPage = createExportPageShell(state.theme, false);
-    sandbox.append(currentPage);
-    let currentBody = currentPage.querySelector('.doc-body');
-
-    for (const unit of atomicUnits) {
-      currentBody.append(unit);
-      if (currentPage.scrollHeight > A4_HEIGHT_PX && currentBody.children.length > 1) {
-        unit.remove();
-        currentPage.style.height = `${A4_HEIGHT_PX}px`;
-        pages.push(currentPage);
-
-        currentPage = createExportPageShell(state.theme, true);
-        sandbox.append(currentPage);
-        currentBody = currentPage.querySelector('.doc-body');
-        currentBody.append(unit);
-      }
-    }
-
-    currentPage.style.height = `${A4_HEIGHT_PX}px`;
-    pages.push(currentPage);
-
-    // Atualiza numeração "Página X de Y" em todos os rodapés
-    const total = pages.length;
-    pages.forEach((pageEl, idx) => {
-      const footer = pageEl.querySelector('.doc-footer');
-      if (footer) {
-        footer.outerHTML = buildFooterHtml(idx + 1, total);
-      }
-    });
-
-    measureSheet.remove();
-    return { sandbox, pages };
-  }
-
   async function exportDirectPdf() {
     if (isExporting) return;
     setExportButtonLoading(true);
@@ -1958,7 +2181,7 @@
         await document.fonts.ready;
       }
 
-      const { sandbox, pages } = buildPaginatedExportSheets();
+      const { sandbox, pages } = buildPaginatedSheetElements(state.theme);
       sandboxRef = sandbox;
 
       const { jsPDF } = window.jspdf;
@@ -1970,6 +2193,8 @@
       });
 
       for (let i = 0; i < pages.length; i += 1) {
+        pages[i].style.boxShadow = 'none';
+        pages[i].style.transform = 'none';
         const canvas = await window.html2canvas(pages[i], {
           scale: 2.2,
           useCORS: true,
