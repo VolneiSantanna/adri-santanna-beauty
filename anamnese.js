@@ -444,7 +444,7 @@
       block: 'start',
     });
     successTitle.focus({ preventScroll: true });
-    announce('Ficha de anamnese enviada com sucesso.');
+    announce('Ficha enviada com sucesso.');
   }
 
   // =========================================================================

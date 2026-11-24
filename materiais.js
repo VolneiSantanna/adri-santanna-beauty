@@ -199,6 +199,8 @@
       theme: 'clean',
       whatsappCustomEdited: false,
       whatsappText: '',
+      anamneseCustomEdited: false,
+      anamneseInviteText: '',
       plano: {
         title: 'Plano de Tratamento & Home Care',
         subtitle: 'Protocolo personalizado para a saúde e vitalidade da sua pele',
@@ -315,6 +317,10 @@
     base.whatsappCustomEdited = Boolean(raw.whatsappCustomEdited);
     if (typeof raw.whatsappText === 'string') {
       base.whatsappText = raw.whatsappText;
+    }
+    base.anamneseCustomEdited = Boolean(raw.anamneseCustomEdited);
+    if (typeof raw.anamneseInviteText === 'string') {
+      base.anamneseInviteText = raw.anamneseInviteText;
     }
     if (raw.plano && typeof raw.plano === 'object') {
       const defProcs = base.plano.procedures;
@@ -1252,6 +1258,36 @@
       scheduleSave();
     });
 
+    const toggleAnamneseEditBtn = document.getElementById('toggleAnamneseEditBtn');
+    const anamneseInviteEditor = document.getElementById('anamneseInviteEditor');
+    const anamneseInviteSource = document.getElementById('anamneseInviteSource');
+    const resetAnamneseInviteBtn = document.getElementById('resetAnamneseInviteBtn');
+
+    toggleAnamneseEditBtn?.addEventListener('click', () => {
+      if (!anamneseInviteEditor) return;
+      const isOpening = anamneseInviteEditor.hidden;
+      anamneseInviteEditor.hidden = !isOpening;
+      toggleAnamneseEditBtn.setAttribute('aria-expanded', isOpening ? 'true' : 'false');
+      toggleAnamneseEditBtn.textContent = isOpening ? 'Ocultar mensagem' : 'Editar mensagem';
+      if (isOpening) {
+        anamneseInviteSource?.focus();
+      }
+    });
+
+    anamneseInviteSource?.addEventListener('input', () => {
+      state.anamneseCustomEdited = true;
+      state.anamneseInviteText = anamneseInviteSource.value;
+      if (resetAnamneseInviteBtn) resetAnamneseInviteBtn.hidden = false;
+      scheduleSave();
+    });
+
+    resetAnamneseInviteBtn?.addEventListener('click', () => {
+      state.anamneseCustomEdited = false;
+      state.anamneseInviteText = '';
+      updateAnamneseInviteMessage();
+      scheduleSave();
+    });
+
     // Restauração inline em 2 cliques (sem modal)
     resetTemplateBtn?.addEventListener('click', () => {
       resetTemplateBtn.hidden = true;
@@ -1321,14 +1357,22 @@
     const activeData = state[state.activeModel] || {};
     const firstName = String(activeData.clientName || '').trim().split(/\s+/)[0];
     const greeting = firstName ? `Olá, ${firstName}! Tudo bem?` : 'Olá! Tudo bem?';
-    return `${greeting} Para preparar o seu atendimento com ainda mais cuidado na Adri Sant’Anna Beauty, por favor preencha sua Ficha de Anamnese antes da visita (leva cerca de 2 minutos): https://adri-santanna-beauty.vercel.app/anamnese`;
+    return `${greeting} Para preparar o seu atendimento com ainda mais cuidado na Adri Sant’Anna Beauty, preencha rapidinho esta ficha antes da sua visita (leva cerca de 2 minutos): https://adri-santanna-beauty.vercel.app/anamnese`;
   }
 
   function updateAnamneseInviteMessage() {
     const inviteSource = document.getElementById('anamneseInviteSource');
-    if (inviteSource) {
-      inviteSource.value = buildAnamneseInviteMessage();
+    const resetBtn = document.getElementById('resetAnamneseInviteBtn');
+    if (!inviteSource) return;
+    if (state.anamneseCustomEdited && state.anamneseInviteText.trim()) {
+      inviteSource.value = state.anamneseInviteText;
+      if (resetBtn) resetBtn.hidden = false;
+      return;
     }
+    const suggested = buildAnamneseInviteMessage();
+    state.anamneseInviteText = suggested;
+    inviteSource.value = suggested;
+    if (resetBtn) resetBtn.hidden = true;
   }
 
   function updateWhatsappMessage() {
