@@ -18,7 +18,7 @@
   const CLINIC = {
     name: 'Adri Sant’Anna Beauty',
     signature: 'Adri Sant’Anna',
-    role: 'Estética Facial & Cosmetologia',
+    role: 'Esteta & Cosmetóloga',
     addressLine1: 'Av. Palmeira, 27 — Sala 307 • Centro Empresarial Montreal',
     addressLine2: 'Bairro Petrópolis • Porto Alegre, RS • CEP 90470-300',
     instagramHandle: '@adrisantannabeauty',
