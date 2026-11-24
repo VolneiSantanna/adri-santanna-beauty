@@ -2,5 +2,7 @@ User-agent: *
 Allow: /
 Disallow: /materiais
 Disallow: /materiais.html
+Disallow: /anamnese
+Disallow: /anamnese.html
 
 Sitemap: https://adrisantannabeauty.vercel.app/sitemap.xml

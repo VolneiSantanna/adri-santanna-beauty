@@ -1317,7 +1317,22 @@
     return `${greeting} Segue o material em PDF (${docTitle}) da Adri Sant’Anna Beauty com todas as orientações combinadas. Qualquer dúvida, estou à disposição!`;
   }
 
+  function buildAnamneseInviteMessage() {
+    const activeData = state[state.activeModel] || {};
+    const firstName = String(activeData.clientName || '').trim().split(/\s+/)[0];
+    const greeting = firstName ? `Olá, ${firstName}! Tudo bem?` : 'Olá! Tudo bem?';
+    return `${greeting} Para preparar o seu atendimento com ainda mais cuidado na Adri Sant’Anna Beauty, por favor preencha sua Ficha de Anamnese antes da visita (leva cerca de 2 minutos): https://adri-santanna-beauty.vercel.app/anamnese`;
+  }
+
+  function updateAnamneseInviteMessage() {
+    const inviteSource = document.getElementById('anamneseInviteSource');
+    if (inviteSource) {
+      inviteSource.value = buildAnamneseInviteMessage();
+    }
+  }
+
   function updateWhatsappMessage() {
+    updateAnamneseInviteMessage();
     if (!whatsappTextarea) return;
     if (state.whatsappCustomEdited && state.whatsappText.trim()) {
       whatsappTextarea.value = state.whatsappText;

@@ -1,0 +1,823 @@
+/* ==========================================================================
+   Adri Sant'Anna Beauty — Ficha de Anamnese (/anamnese)
+   Identidade editorial da clínica + Boas práticas de formulários
+   ========================================================================== */
+
+:root {
+  --bg-almond: #F6EEEF;
+  --bg-blush-mist: #ECE0E2;
+  --bg-card-warm: #FBF7F7;
+  --bg-surface: #FFFFFF;
+
+  --clinic-green: #4A5853;
+  --clinic-green-deep: #2D3834;
+  --clinic-green-soft: #E9EFEA;
+
+  --antique-rose: #C88D90;
+  --antique-rose-soft: rgba(200, 141, 144, 0.2);
+  --antique-rose-text: #73393E;
+
+  --champagne-line: #DECBC0;
+  --champagne-soft: rgba(222, 203, 192, 0.55);
+
+  --ink-primary: #25201E;
+  --ink-secondary: #4D423E;
+  --ink-placeholder: #5C504C;
+  --ink-on-green: #F7F1EC;
+
+  --error-ink: #8E242C;
+  --error-bg: #FCEEEF;
+  --error-border: #B53B46;
+
+  --font-display: 'Bodoni Moda', Georgia, 'Times New Roman', serif;
+  --font-body: 'Jost', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  --radius-sm: 0.65rem;
+  --radius-md: 1.1rem;
+  --radius-pill: 999rem;
+  --shadow-editorial: 0 1.25rem 3rem -1rem rgba(37, 32, 30, 0.14);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scrollbar-color: var(--antique-rose) var(--bg-almond);
+  scrollbar-width: thin;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.55;
+  color: var(--ink-primary);
+  background-color: var(--bg-almond);
+  background-image:
+    radial-gradient(circle at 12% 8%, rgba(200, 141, 144, 0.14), transparent 38%),
+    radial-gradient(circle at 88% 92%, rgba(74, 88, 83, 0.08), transparent 42%);
+  caret-color: var(--clinic-green-deep);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+::selection {
+  background-color: var(--antique-rose-soft);
+  color: var(--ink-primary);
+}
+
+:focus-visible {
+  outline: 2px solid var(--clinic-green-deep);
+  outline-offset: 3px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  clip-path: inset(50%) !important;
+  overflow: hidden !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  white-space: nowrap !important;
+}
+
+.skip-link {
+  position: fixed;
+  top: -10rem;
+  left: 1rem;
+  z-index: 300;
+  padding: 0.75rem 1.25rem;
+  background-color: var(--clinic-green-deep);
+  color: var(--ink-on-green);
+  border-radius: var(--radius-pill);
+  font-size: 0.92rem;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+h1,
+h2,
+h3 {
+  margin-block: 0;
+  color: var(--ink-primary);
+  text-wrap: balance;
+}
+
+p {
+  margin-block: 0;
+  text-wrap: pretty;
+}
+
+a {
+  color: inherit;
+  text-underline-offset: 0.24em;
+  text-decoration-thickness: 1px;
+}
+
+button,
+input,
+textarea {
+  font-family: var(--font-body);
+}
+
+/* ==========================================================================
+   Cabeçalho Editorial (Wordmark travado em opsz 14)
+   ========================================================================== */
+
+.anamnese-header {
+  padding: 1.5rem 1rem 0.9rem;
+  text-align: center;
+}
+
+.anamnese-header-inner {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.brand-wordmark {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: var(--ink-primary);
+  line-height: 1;
+  gap: 0.28rem;
+  padding: 0.25rem 0.4rem;
+}
+
+.wordmark-main {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.24em;
+  font-family: var(--font-display);
+  font-optical-sizing: none;
+  font-variation-settings: 'opsz' 14;
+  font-size: 1.82rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.wordmark-first {
+  font-style: normal;
+  font-weight: 500;
+}
+
+.wordmark-last {
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0.005em;
+}
+
+.wordmark-apostrophe {
+  color: var(--antique-rose-text);
+  font-style: italic;
+  margin-inline: 0.01em;
+}
+
+.wordmark-sub {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  width: 100%;
+}
+
+.wordmark-rule {
+  flex: 1 1 1rem;
+  height: 1px;
+  background-color: var(--antique-rose);
+  opacity: 0.85;
+}
+
+.wordmark-beauty {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--clinic-green);
+  padding-left: 0.34em;
+}
+
+.wordmark-ornament {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 0.58rem;
+  height: 0.58rem;
+  color: var(--antique-rose-text);
+  flex-shrink: 0;
+}
+
+.header-role {
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-secondary);
+}
+
+/* ==========================================================================
+   Cartão Único Principal & Barra de Etapas
+   ========================================================================== */
+
+.anamnese-main {
+  flex: 1 0 auto;
+  width: 100%;
+  padding: 0.5rem 1rem 2.5rem;
+}
+
+.anamnese-card {
+  width: 100%;
+  max-width: 42rem;
+  margin-inline: auto;
+  padding: 1.5rem 1.25rem 1.75rem;
+  background-color: var(--bg-card-warm);
+  border: 1px solid var(--champagne-line);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-editorial);
+}
+
+.anamnese-intro {
+  padding-bottom: 1.15rem;
+  border-bottom: 1px solid var(--champagne-soft);
+}
+
+.anamnese-title {
+  font-family: var(--font-display);
+  font-optical-sizing: none;
+  font-variation-settings: 'opsz' 14;
+  font-size: clamp(1.65rem, 4vw, 2.05rem);
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.anamnese-lead {
+  margin-top: 0.5rem;
+  font-size: 0.96rem;
+  color: var(--ink-secondary);
+}
+
+.required-legend {
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--ink-secondary);
+}
+
+.required-mark {
+  color: var(--antique-rose-text);
+  font-weight: 600;
+}
+
+/* Progresso em 3 etapas */
+
+.step-nav {
+  margin-top: 1.15rem;
+  margin-bottom: 1.35rem;
+}
+
+.step-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.45rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.step-trigger {
+  width: 100%;
+  min-block-size: 3rem;
+  padding: 0.45rem 0.4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  border: 1px solid var(--champagne-line);
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-surface);
+  color: var(--ink-secondary);
+  font-size: 0.84rem;
+  font-weight: 500;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: border-color 0.18s ease, background-color 0.18s ease, color 0.18s ease;
+}
+
+.step-trigger:hover {
+  border-color: var(--antique-rose);
+  color: var(--ink-primary);
+}
+
+.step-marker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.45rem;
+  height: 1.45rem;
+  border-radius: 999px;
+  border: 1px solid var(--champagne-line);
+  font-size: 0.78rem;
+  font-weight: 600;
+  background-color: var(--bg-card-warm);
+  color: var(--ink-secondary);
+}
+
+.step-check {
+  display: none;
+}
+
+.step-trigger[aria-current='step'] {
+  border-color: var(--clinic-green-deep);
+  background-color: var(--clinic-green-soft);
+  color: var(--clinic-green-deep);
+  font-weight: 600;
+}
+
+.step-trigger[aria-current='step'] .step-marker {
+  border-color: var(--clinic-green-deep);
+  background-color: var(--clinic-green-deep);
+  color: var(--ink-on-green);
+}
+
+.step-item.is-completed .step-trigger {
+  border-color: var(--clinic-green);
+  color: var(--clinic-green-deep);
+}
+
+.step-item.is-completed .step-marker {
+  border-color: var(--clinic-green);
+  background-color: var(--clinic-green);
+  color: var(--ink-on-green);
+}
+
+.step-item.is-completed .step-num {
+  display: none;
+}
+
+.step-item.is-completed .step-check {
+  display: block;
+}
+
+.step-progress-bar {
+  margin-top: 0.7rem;
+  height: 0.3rem;
+  width: 100%;
+  border-radius: var(--radius-pill);
+  background-color: var(--bg-blush-mist);
+  overflow: hidden;
+}
+
+.step-progress-fill {
+  height: 100%;
+  width: 33.333%;
+  border-radius: var(--radius-pill);
+  background-color: var(--clinic-green-deep);
+  transition: width 0.25s ease;
+}
+
+/* ==========================================================================
+   Campos, Rádios e Validação Pós-Interação
+   ========================================================================== */
+
+.step-header {
+  margin-bottom: 1.25rem;
+}
+
+.step-heading {
+  font-family: var(--font-display);
+  font-optical-sizing: none;
+  font-variation-settings: 'opsz' 14;
+  font-size: 1.48rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.step-heading:focus {
+  outline: none;
+}
+
+.step-subtitle {
+  margin-top: 0.3rem;
+  font-size: 0.94rem;
+  color: var(--ink-secondary);
+}
+
+.fields-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+}
+
+.field-group,
+.radio-fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.field-label,
+.field-legend {
+  display: block;
+  padding: 0;
+  font-size: 0.98rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--ink-primary);
+}
+
+.field-legend {
+  margin-bottom: 0.45rem;
+}
+
+input[type='text'],
+input[type='date'],
+textarea {
+  width: 100%;
+  min-block-size: 3rem;
+  padding: 0.72rem 0.9rem;
+  border: 1px solid var(--champagne-line);
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-surface);
+  color: var(--ink-primary);
+  font-size: max(1rem, 1em);
+  line-height: 1.45;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+}
+
+textarea {
+  resize: vertical;
+  min-block-size: 4.5rem;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--ink-placeholder);
+  opacity: 0.9;
+}
+
+input:focus,
+textarea:focus {
+  border-color: var(--clinic-green-deep);
+  box-shadow: 0 0 0 3px rgba(74, 88, 83, 0.16);
+  outline: none;
+}
+
+input:is(:user-invalid, .is-invalid),
+textarea:is(:user-invalid, .is-invalid) {
+  border-color: var(--error-border);
+  background-color: var(--error-bg);
+}
+
+input:is(:user-invalid, .is-invalid):focus,
+textarea:is(:user-invalid, .is-invalid):focus {
+  box-shadow: 0 0 0 3px rgba(181, 59, 70, 0.18);
+}
+
+.radio-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.radio-list--inline {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.radio-list--grid-2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.55rem;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-block-size: 3rem;
+  padding: 0.65rem 0.9rem;
+  border: 1px solid var(--champagne-line);
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-surface);
+  color: var(--ink-primary);
+  font-size: max(1rem, 1em);
+  line-height: 1.35;
+  cursor: pointer;
+  transition: border-color 0.18s ease, background-color 0.18s ease;
+}
+
+.radio-option:hover {
+  border-color: var(--antique-rose);
+}
+
+.radio-option:has(input:checked) {
+  border-color: var(--clinic-green-deep);
+  background-color: var(--clinic-green-soft);
+  font-weight: 500;
+}
+
+.radio-option input[type='radio'] {
+  flex: 0 0 auto;
+  width: 1.2rem;
+  height: 1.2rem;
+  margin: 0;
+  accent-color: var(--clinic-green-deep);
+  cursor: pointer;
+}
+
+.radio-fieldset.is-invalid .radio-option {
+  border-color: var(--error-border);
+  background-color: var(--error-bg);
+}
+
+.other-field-box {
+  margin-top: 0.5rem;
+  padding: 0.9rem;
+  border: 1px solid var(--champagne-line);
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-surface);
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.field-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+  font-size: 0.88rem;
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--error-ink);
+  margin-top: 0.15rem;
+}
+
+.field-error svg {
+  flex: 0 0 auto;
+  margin-top: 0.12rem;
+}
+
+.form-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding: 0.9rem 1rem;
+  margin-bottom: 1.15rem;
+  border: 1px solid var(--error-border);
+  border-radius: var(--radius-sm);
+  background-color: var(--error-bg);
+  color: var(--error-ink);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.form-banner svg {
+  flex: 0 0 auto;
+  margin-top: 0.12rem;
+}
+
+#submitErrorBanner {
+  margin-top: 1.25rem;
+  margin-bottom: 0;
+}
+
+.banner-fallback-link {
+  margin-top: 0.4rem;
+}
+
+/* ==========================================================================
+   Botões & Ações da Etapa
+   ========================================================================== */
+
+.step-actions {
+  margin-top: 1.75rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--champagne-soft);
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 0.7rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-block-size: 3.1rem;
+  padding: 0.78rem 1.4rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.98rem;
+  font-weight: 500;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.18s ease, border-color 0.18s ease, transform 0.16s ease, opacity 0.18s ease;
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.btn:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+.btn-primary {
+  border: 1px solid var(--clinic-green-deep);
+  background-color: var(--clinic-green-deep);
+  color: var(--ink-on-green);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--clinic-green);
+  border-color: var(--clinic-green);
+}
+
+.btn-secondary {
+  border: 1px solid var(--champagne-line);
+  background-color: var(--bg-surface);
+  color: var(--ink-primary);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  border-color: var(--clinic-green);
+  background-color: var(--clinic-green-soft);
+}
+
+/* ==========================================================================
+   Tela de Confirmação
+   ========================================================================== */
+
+.anamnese-success {
+  padding: 1.25rem 0.25rem 0.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.success-emblem {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 4.2rem;
+  height: 4.2rem;
+  border-radius: 999px;
+  background-color: var(--clinic-green-soft);
+  border: 1px solid var(--clinic-green);
+  color: var(--clinic-green-deep);
+}
+
+.success-title {
+  font-family: var(--font-display);
+  font-optical-sizing: none;
+  font-variation-settings: 'opsz' 14;
+  font-size: 1.72rem;
+  font-weight: 500;
+}
+
+.success-title:focus {
+  outline: none;
+}
+
+.success-message {
+  max-width: 34rem;
+  color: var(--ink-secondary);
+}
+
+.success-details {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--champagne-line);
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-surface);
+  font-size: 0.9rem;
+  color: var(--ink-secondary);
+}
+
+.success-actions {
+  width: 100%;
+  margin-top: 0.35rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+/* ==========================================================================
+   Rodapé Institucional
+   ========================================================================== */
+
+.anamnese-footer {
+  padding: 1rem 1rem 1.75rem;
+  text-align: center;
+  font-size: 0.84rem;
+  color: var(--ink-secondary);
+}
+
+.footer-inner {
+  max-width: 42rem;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+/* ==========================================================================
+   Responsividade & Dispositivos de Toque
+   ========================================================================== */
+
+@media (pointer: coarse) {
+  input[type='text'],
+  input[type='date'],
+  textarea,
+  .radio-option,
+  .btn,
+  .step-trigger {
+    min-block-size: 3.25rem;
+  }
+}
+
+@media (min-width: 40rem) {
+  .anamnese-header {
+    padding: 2rem 1.5rem 1.1rem;
+  }
+
+  .wordmark-main {
+    font-size: 2rem;
+  }
+
+  .anamnese-card {
+    padding: 2.15rem 2.25rem 2.25rem;
+  }
+
+  .step-trigger {
+    flex-direction: row;
+    gap: 0.5rem;
+    padding: 0.55rem 0.75rem;
+    font-size: 0.92rem;
+  }
+
+  .radio-list--grid-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .step-actions {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .step-actions--end {
+    justify-content: flex-end;
+  }
+
+  .success-actions {
+    flex-direction: row;
+    justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
