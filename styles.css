@@ -439,7 +439,7 @@ a {
 .main-nav {
   display: flex;
   align-items: center;
-  gap: clamp(0.85rem, 0.5rem + 1vw, 1.8rem);
+  gap: clamp(0.75rem, 0.45rem + 0.85vw, 1.5rem);
 }
 
 .main-nav a {
@@ -450,6 +450,7 @@ a {
   font-weight: 400;
   color: var(--ink-secondary);
   text-decoration: none;
+  white-space: nowrap;
   position: relative;
   padding-block: 0.45rem;
   transition: color 0.2s ease;
@@ -1118,6 +1119,127 @@ a {
   }
 
   .protocol-panel .btn {
+    width: 100%;
+  }
+}
+
+/* ==========================================================================
+   Seção — Peeling Coreano 4D (Efeito Glow & Glass Skin)
+   ========================================================================== */
+
+.peeling-4d-section {
+  padding: 4.5rem 1.25rem;
+  background-color: var(--bg-card-warm);
+  border-top: 1px solid var(--champagne-soft);
+  border-bottom: 1px solid var(--champagne-soft);
+}
+
+.peeling-4d-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.04fr);
+  gap: clamp(2rem, 1.4rem + 2.8vw, 4.25rem);
+  align-items: start;
+}
+
+.peeling-subheading {
+  font-family: var(--font-display);
+  font-optical-sizing: none;
+  font-variation-settings: 'opsz' 14;
+  font-size: clamp(1.2rem, 1.08rem + 0.35vw, 1.42rem);
+  font-weight: 500;
+  color: var(--clinic-green-deep);
+  margin-bottom: 0.9rem;
+}
+
+.peeling-indications {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.peeling-indications li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding-top: 0.85rem;
+  padding-bottom: 0.85rem;
+  border-top: 1px solid var(--champagne-line);
+  color: var(--ink-primary);
+  font-size: 0.98rem;
+  line-height: 1.5;
+}
+
+.peeling-indications li:last-child {
+  border-bottom: 1px solid var(--champagne-line);
+}
+
+.peeling-indications svg {
+  flex: 0 0 auto;
+  width: 1.15rem;
+  height: 1.15rem;
+  margin-top: 0.18rem;
+  color: var(--antique-rose-text);
+}
+
+.peeling-4d-actions {
+  margin-top: 1.85rem;
+}
+
+.peeling-4d-frame {
+  margin: 0;
+  padding: 0.5rem;
+  background-color: var(--bg-almond);
+  border: 1px solid var(--champagne-line);
+  border-radius: 1.4rem;
+  box-shadow: var(--shadow-editorial);
+}
+
+.peeling-4d-frame img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 1rem;
+}
+
+.peeling-4d-caption {
+  padding: 0.7rem 0.5rem 0.25rem;
+  font-size: 0.86rem;
+  color: var(--ink-secondary);
+}
+
+.peeling-dimension-note {
+  margin-top: 1.25rem;
+  padding: 1.35rem 1.45rem;
+  background-color: var(--bg-blush-mist);
+  border: 1px solid var(--antique-rose-border);
+  border-radius: 1rem;
+}
+
+.peeling-dimension-title {
+  font-family: var(--font-display);
+  font-optical-sizing: none;
+  font-variation-settings: 'opsz' 14;
+  font-size: clamp(1.12rem, 1.04rem + 0.3vw, 1.32rem);
+  font-weight: 500;
+  color: var(--clinic-green-deep);
+  margin-bottom: 0.55rem;
+}
+
+.peeling-dimension-note p {
+  font-size: 0.95rem;
+  line-height: 1.62;
+  color: var(--ink-primary);
+}
+
+@media (max-width: 58rem) {
+  .peeling-4d-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 36rem) {
+  .peeling-4d-actions .btn {
     width: 100%;
   }
 }
